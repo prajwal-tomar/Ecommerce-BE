@@ -28,6 +28,7 @@ public class CartController {
     @GetMapping("/")
     public ResponseEntity<Cart> getCartDetails(@RequestHeader("Authorization") String jwt) throws Exception {
         User user = userService.findUserByJWT(jwt);
+        System.out.println(user);
         Cart cart = cartService.findByUserId(user.getId());
         return ResponseEntity.ok(cart);
     }

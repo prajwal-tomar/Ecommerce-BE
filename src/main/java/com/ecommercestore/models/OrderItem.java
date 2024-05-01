@@ -37,8 +37,6 @@ public class OrderItem {
 
     private Integer discountedPrice;
 
-    private Integer discount;
-
     private Long userId;
 
     private LocalDateTime deliveryDate;

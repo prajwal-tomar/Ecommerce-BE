@@ -7,7 +7,7 @@ import com.ecommercestore.models.Order;
 import com.ecommercestore.models.User;
 
 public interface OrderService {
-    public Order createOrder(Order order, User user, Address shippingAddress);
+    public Order createOrder(User user, Address shippingAddress);
 
     public Order findOrderById(Long id) throws Exception;
 
@@ -15,6 +15,7 @@ public interface OrderService {
 
     public Order placeOrder(Long orderId) throws Exception;
 
+    // Admin Methods
     public Order confirmOrder(Long orderId) throws Exception;
 
     public Order shipOrder(Long orderId) throws Exception;

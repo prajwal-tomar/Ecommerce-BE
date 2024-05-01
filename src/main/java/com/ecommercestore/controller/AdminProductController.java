@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,26 +17,39 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ecommercestore.models.Product;
 import com.ecommercestore.request.CreateProductRequest;
+import com.ecommercestore.response.ApiResponse;
 import com.ecommercestore.service.ProductService;
 
 @RestController
-@RequestMapping("/api")
-public class ProductController {
+@RequestMapping("/api/admin/products")
+public class AdminProductController {
 
     @Autowired
     private ProductService productService;
 
-    @PostMapping("/products")
-    Product createProduct(@RequestBody CreateProductRequest req) throws Exception {
-        return productService.createProduct(req);
+    @PostMapping("/")
+    ResponseEntity<Product> createProduct(@RequestBody CreateProductRequest req) throws Exception {
+        Product product = productService.createProduct(req);
+        return new ResponseEntity<Product>(product, HttpStatus.CREATED);
     }
 
-    @PostMapping("/products/{id}")
+    @PostMapping("/create-bulk")
+    public ResponseEntity<ApiResponse> createProductInBulk(@RequestBody CreateProductRequest[] req) throws Exception {
+        for (CreateProductRequest product : req) {
+            productService.createProduct(product);
+        }
+        ApiResponse apiResponse = new ApiResponse();
+        apiResponse.setMessage("Products added successfully.");
+        apiResponse.setStatus(true);
+        return new ResponseEntity<>(apiResponse, HttpStatus.CREATED);
+    }
+
+    @PostMapping("/{id}")
     public Product updateProduct(@PathVariable Long id, Product product) throws Exception {
         return productService.updateProduct(id, product);
     }
 
-    @GetMapping("/products")
+    @GetMapping("/")
     ResponseEntity<Page<Product>> getAllProducts(@RequestParam(required = false) String category,
             @RequestParam(required = false) List<String> colors,
             @RequestParam(required = false) List<String> sizes,
@@ -54,12 +68,12 @@ public class ProductController {
         return ResponseEntity.ok(page);
     }
 
-    @GetMapping("/products/{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<Product> getProductById(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(productService.getProductById(id));
     }
 
-    @DeleteMapping("/products/{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) throws Exception {
         return ResponseEntity.ok(productService.deleteProduct(id));
     }

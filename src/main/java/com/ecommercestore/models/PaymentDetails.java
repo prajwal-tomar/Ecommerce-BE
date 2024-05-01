@@ -13,4 +13,5 @@ public class PaymentDetails {
     private String razorpayPaymentLinkReferenceId;
     private String razorpayPaymentLinkStatus;
     private String razorpayPaymentId;
+    private String status; // Pending/ Paid
 }
